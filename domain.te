@@ -179,6 +179,7 @@ neverallow {
   -recovery
   -ueventd
   -healthd
+  -vold
   -uncrypt
   -tee
 } self:capability sys_rawio;
