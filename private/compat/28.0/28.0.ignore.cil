@@ -106,6 +106,7 @@
     permissionmgr_service
     postinstall_apex_mnt_dir
     proc_dt_firmware_android
+    proc_last_kmsg
     recovery_socket
     role_service
     rollback_service
