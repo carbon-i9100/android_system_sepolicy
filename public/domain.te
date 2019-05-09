@@ -262,7 +262,7 @@ allow domain fs_type:dir getattr;
 # defaults for all processes. Note that granting this whitelist to domain does
 # not grant the ioctl permission on these socket types. That must be granted
 # separately.
-allowxperm domain domain:{ rawip_socket tcp_socket udp_socket }
+allowxperm domain domain:{ icmp_socket rawip_socket tcp_socket udp_socket }
   ioctl { unpriv_sock_ioctls unpriv_tty_ioctls };
 # default whitelist for unix sockets.
 allowxperm domain domain:{ unix_dgram_socket unix_stream_socket }
@@ -1034,7 +1034,10 @@ full_treble_only(`
       coredomain
       -shell
       -system_executes_vendor_violators
-    } vendor_file_type:file execute_no_trans;
+    } {
+      vendor_file_type
+      -same_process_hal_file
+    }:file execute_no_trans;
 ')
 
 # Only authorized processes should be writing to files in /data/dalvik-cache
@@ -1412,4 +1415,13 @@ userdebug_or_eng(`
 neverallow {
   coredomain
   -init
+  -ueventd
+  -vold
+  -system_writes_mnt_vendor_violators
 } mnt_vendor_file:dir *;
+
+# Vendor domian must not have access to /mnt/product.
+neverallow {
+  domain
+  -coredomain
+} mnt_product_file:dir *;
